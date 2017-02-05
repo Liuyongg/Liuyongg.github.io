@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JS高级知识 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="闭包优化缓存解决递归实现的斐波那契数列存在的性能问题123456789101112131415function createFib()&amp;#123;    var arr = [];    function fib(n)&amp;#123;        var num = arr[n];        if(!num)&amp;#123;            if(n &amp;lt;= 2)&amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS高级知识">
+<meta property="og:url" content="http://yoursite.com/2017/02/05/JS高级知识/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="闭包优化缓存解决递归实现的斐波那契数列存在的性能问题123456789101112131415function createFib()&amp;#123;    var arr = [];    function fib(n)&amp;#123;        var num = arr[n];        if(!num)&amp;#123;            if(n &amp;lt;= 2)&amp;#123;">
+<meta property="og:updated_time" content="2017-02-05T11:51:58.996Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS高级知识">
+<meta name="twitter:description" content="闭包优化缓存解决递归实现的斐波那契数列存在的性能问题123456789101112131415function createFib()&amp;#123;    var arr = [];    function fib(n)&amp;#123;        var num = arr[n];        if(!num)&amp;#123;            if(n &amp;lt;= 2)&amp;#123;">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Søk"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JS高级知识" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/02/05/JS高级知识/" class="article-date">
+  <time datetime="2017-02-05T11:48:33.000Z" itemprop="datePublished">2017-02-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JS高级知识
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="闭包优化缓存解决递归实现的斐波那契数列存在的性能问题"><a href="#闭包优化缓存解决递归实现的斐波那契数列存在的性能问题" class="headerlink" title="闭包优化缓存解决递归实现的斐波那契数列存在的性能问题"></a>闭包优化缓存解决递归实现的斐波那契数列存在的性能问题</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFib</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> arr = [];</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fib</span>(<span class="params">n</span>)</span>&#123;</div><div class="line">        <span class="keyword">var</span> num = arr[n];</div><div class="line">        <span class="keyword">if</span>(!num)&#123;</div><div class="line">            <span class="keyword">if</span>(n &lt;= <span class="number">2</span>)&#123;</div><div class="line">                num = <span class="number">1</span>;</div><div class="line">            &#125;<span class="keyword">else</span>&#123;</div><div class="line">                num = fib(n - <span class="number">1</span>) + fib(n <span class="number">-2</span>);</div><div class="line">            &#125;</div><div class="line">            arr[n] = num;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> num;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="jQuery缓存实现"><a href="#jQuery缓存实现" class="headerlink" title="jQuery缓存实现"></a>jQuery缓存实现</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCache</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> cache = &#123;&#125;;</div><div class="line">    <span class="keyword">var</span> keys = [];</div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">key, value</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(value != <span class="literal">undefined</span>)&#123;</div><div class="line">            cache[key] = value;</div><div class="line">            <span class="keyword">if</span>(keys.push(key) &gt; <span class="number">20</span>)&#123;</div><div class="line">                <span class="keyword">delete</span> cache[keys.shift()];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> cache[key];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="jQuery缓存源码分析"><a href="#jQuery缓存源码分析" class="headerlink" title="jQuery缓存源码分析"></a>jQuery缓存源码分析</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createCache</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> keys = [];</div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">cache</span>(<span class="params">key, value</span>)</span>&#123;</div><div class="line">        <span class="keyword">if</span>(keys.push(key + <span class="string">" "</span>) &gt; <span class="number">20</span>)&#123;</div><div class="line">            <span class="keyword">delete</span> cache[keys.shift()];</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> (cache[key + <span class="string">" "</span>] = value);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cache;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="沙箱模式"><a href="#沙箱模式" class="headerlink" title="沙箱模式"></a>沙箱模式</h2><p>一个封闭的隔离的环境！</p>
+<p>在JS中通过函数来创建沙箱</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">window</span>)</span>&#123;</div><div class="line">    <span class="comment">//变量的声明</span></div><div class="line"></div><div class="line">    <span class="comment">//主要的功能代码</span></div><div class="line"></div><div class="line">    <span class="comment">//如果需要，就通过window对象向外界暴露接口</span></div><div class="line"></div><div class="line">&#125;)(<span class="built_in">window</span>)</div></pre></td></tr></table></figure>
+<h3 id="将window对象作为参数的目的"><a href="#将window对象作为参数的目的" class="headerlink" title="将window对象作为参数的目的"></a>将window对象作为参数的目的</h3><ol>
+<li>便于代码压缩</li>
+<li>实现逻辑上的隔离，外部不访问里面的东西，里面也不访问外面的东西</li>
+</ol>
+<h3 id="沙箱的应用"><a href="#沙箱的应用" class="headerlink" title="沙箱的应用"></a>沙箱的应用</h3><ol>
+<li>框架</li>
+<li>组件</li>
+<li>插件</li>
+</ol>
+<h2 id="函数的调用模式"><a href="#函数的调用模式" class="headerlink" title="函数的调用模式"></a>函数的调用模式</h2><h3 id="函数调用模式"><a href="#函数调用模式" class="headerlink" title="函数调用模式"></a>函数调用模式</h3><p>函数名();<br>this —&gt; window</p>
+<h3 id="方法调用模式"><a href="#方法调用模式" class="headerlink" title="方法调用模式"></a>方法调用模式</h3><p>对象.方法名();<br>this —&gt; 调用该方法的对象</p>
+<h3 id="构造函数调用模式"><a href="#构造函数调用模式" class="headerlink" title="构造函数调用模式"></a>构造函数调用模式</h3><p>new 函数名();<br>this —&gt; new创建出来的实例</p>
+<h3 id="上下文调用模式"><a href="#上下文调用模式" class="headerlink" title="上下文调用模式"></a>上下文调用模式</h3><h2 id="两种创建对象的方式"><a href="#两种创建对象的方式" class="headerlink" title="两种创建对象的方式"></a>两种创建对象的方式</h2><h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObj</span>(<span class="params">name, age</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">    obj.name = name;</div><div class="line">    obj.age = age;</div><div class="line">    <span class="keyword">return</span> obj;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> p = createObj(<span class="string">"郑天羊"</span>, <span class="number">18</span>);</div></pre></td></tr></table></figure>
+<h3 id="寄生模式"><a href="#寄生模式" class="headerlink" title="寄生模式"></a>寄生模式</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, age</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> obj = <span class="keyword">new</span> <span class="built_in">Object</span>();</div><div class="line">    obj.name = name;</div><div class="line">    obj.age = age;</div><div class="line">    <span class="keyword">return</span> obj;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> Person(<span class="string">"郑天羊"</span>, <span class="number">18</span>);</div></pre></td></tr></table></figure>
+<p>工厂模式和寄生模式都可以用来创建对象，但是调用模式不一样，工厂模式是函数调用模式，寄生模式是构造函数调用模式！</p>
+<h2 id="上下文调用模式-1"><a href="#上下文调用模式-1" class="headerlink" title="上下文调用模式"></a>上下文调用模式</h2><h3 id="call"><a href="#call" class="headerlink" title="call"></a>call</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">函数名.call(obj, arg1...argN);</div><div class="line"><span class="comment">//功能：</span></div><div class="line">    <span class="comment">//1. 调用函数</span></div><div class="line">    <span class="comment">//2. 改变this指向为第一个参数中的对象</span></div><div class="line">    <span class="comment">//3. 将第二个及以后的所有参数，依次的传递给函数作为实参</span></div></pre></td></tr></table></figure>
+<h3 id="apply"><a href="#apply" class="headerlink" title="apply"></a>apply</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">函数名.apply(obj, 数组or伪数组);</div><div class="line"><span class="comment">//功能：</span></div><div class="line">    <span class="comment">//1. 调用函数</span></div><div class="line">    <span class="comment">//2. 改变this指向为第一个参数中的对象</span></div><div class="line">    <span class="comment">//3. 将第二个参数的数组或者伪数组，中的元素一一拆解，依次传递给函数作为实参</span></div></pre></td></tr></table></figure>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>如果call和apply的第一个参数为null或者undefined,this将会指向window</li>
+<li>如果call和apply的第一个参数为值类型的数据，会将值类型的数据转换成其对应的引用类型的数据，this指向该引用类型的数据</li>
+</ol>
+<p>tips: 一般情况下apply的传参特性会被使用的居多（转换伪数组为真数组，求最大值）</p>
+<h2 id="forEach和map的使用"><a href="#forEach和map的使用" class="headerlink" title="forEach和map的使用"></a>forEach和map的使用</h2><p>都可以用来遍历数组</p>
+<h3 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">数组.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">value, index, arr</span>)</span>&#123;&#125;)</div><div class="line"><span class="comment">//value：正在遍历的数组元素</span></div><div class="line"><span class="comment">//index: 正在遍历的数组元素的索引</span></div><div class="line"><span class="comment">//arr: 正在遍历的数组</span></div></pre></td></tr></table></figure>
+<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">数组.map(<span class="function"><span class="keyword">function</span>(<span class="params">value, index, arr</span>)</span>&#123;&#125;)</div><div class="line"><span class="comment">//value：正在遍历的数组元素</span></div><div class="line"><span class="comment">//index: 正在遍历的数组元素的索引</span></div><div class="line"><span class="comment">//arr: 正在遍历的数组</span></div></pre></td></tr></table></figure>
+<p>map是有返回值的，他的返回值是，将每次调用回调函数之后的返回值拼接成一个新的数组，将这个数组返回，作为map的返回值！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/02/05/JS高级知识/" data-id="ciysm3aus0000j855o49rsgdl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Arkiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">February 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Siste innlegg</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/02/05/JS高级知识/">JS高级知识</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
